@@ -1,31 +1,12 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include <vector>
 #include <math.h>
 #include <algorithm>
 #include <iostream>
 #include <string>
 #include <sstream>
+#include<BinaryMinHeap.h>
 
-class BinaryMinHeap {
-	std::vector<int> heap;
-
-public:
-	BinaryMinHeap(std::vector<int> values);
-	BinaryMinHeap();
-
-	void Insert(int priority);
-	void Remove(int index);
-	int getMin();
-	int ExtractMin();
-	void ChangePriority(int index, int priority);
-
-private:
-	void SiftUp(int index);
-	void SiftDown(int index);
-
-	int getMinChildIndex(int parent_index);
-	void Swap(int i, int j);
-};
 
 BinaryMinHeap::BinaryMinHeap(std::vector<int> values) {
 	for (auto &value : values) {
@@ -131,45 +112,3 @@ int BinaryMinHeap::getMinChildIndex(int parent_index) {
 	return -1;
 }
 
-int main()
-{
-	std::vector<int> values = { 1,2,3,4,5,6,7,8,9,10 };
-	BinaryMinHeap *heap = new BinaryMinHeap(values);
-	std::cout << heap->getMin() << std::endl;
-
-	heap->Insert(100);
-	std::cout << heap->getMin() << std::endl;
-
-	heap->Remove(0);
-	std::cout << heap->getMin() << std::endl;
-
-	int max = heap->ExtractMin();
-	std::cout << heap->getMin() << std::endl;
-
-	heap->ChangePriority(0, 1);
-	std::cout << heap->getMin() << std::endl;
-
-
-	/*int n_opers;
-	std::cin >> n_opers;
-	std::cin.ignore();
-
-	BinaryMinHeap *heap = new BinaryMinHeap();
-	std::string str;
-	std::vector<std::string> data;
-	for (int i = 0; i < n_opers; ++i) {
-		data.clear();
-
-		std::getline(std::cin, str);
-		std::istringstream iss(str);
-		std::string s;
-		while (std::getline(iss, s, ' '))
-			data.push_back(s.c_str());
-
-		if (data[0] == "Insert")
-			heap->Insert(std::stoi(data[1]));
-		else
-			std::cout << heap->ExtractMin() << std::endl;
-	}*/
-
-}
