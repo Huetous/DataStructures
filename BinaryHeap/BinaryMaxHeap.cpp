@@ -1,116 +1,111 @@
-#include <stdlib.h>
 #include "pch.h"
 #include <vector>
-#include <math.h>
 #include <algorithm>
 #include <iostream>
-#include <string>
-#include <sstream>
 #include <BinaryMaxHeap.h>
 
-
-BinaryMaxHeap::BinaryMaxHeap(std::vector<int> values) {
+template <typename T>
+BinaryMaxHeap<T>::BinaryMaxHeap(std::vector<T> &values) {
 	for (auto &value : values) {
 		heap.push_back(value);
-		SiftUp(heap.size() - 1);
+		sift_up(heap.size() - 1);
 	}
 }
 
-BinaryMaxHeap::BinaryMaxHeap() {}
+template <typename T>
+BinaryMaxHeap<T>::BinaryMaxHeap() {}
 
-void BinaryMaxHeap::Insert(int priority) {
-	heap.push_back(priority);
-	SiftUp(heap.size() - 1);
+template <typename T>
+uint32_t BinaryMaxHeap<T>::size() {
+	return heap.size();
 }
 
-void BinaryMaxHeap::Remove(int index) {
-	if (0 <= index <= heap.size() - 1) {
-		heap[index] = getMax() + 1;
-		ExtractMax();
+template <typename T>
+int32_t BinaryMaxHeap<T>::get_max() {
+	return size() > 0 ? heap[0] : 0;
+}
+
+template <typename T>
+void BinaryMaxHeap<T>::insert(T value) {
+	heap.push_back(value);
+	sift_up(size() - 1);
+}
+
+template <typename T>
+void BinaryMaxHeap<T>::change_priority(uint32_t i, int32_t priority) {
+	if (0 <= i && i < size()) {
+		if (heap[i] < priority) {
+			heap[i] = priority;
+			sift_up(i);
+		}
+		else if (heap[i] > priority) {
+			heap[i]= priority;
+			sift_down(i);
+		}
 	}
-	return;
 }
 
-int BinaryMaxHeap::getMax() {
-	if (heap.size() > 0)
-		return heap[0];
+template <typename T>
+void BinaryMaxHeap<T>::remove(uint32_t i) {
+	if (0 <= i && i < size()) {
+		change_priority(i, get_max() + 1);
+		extract_max();
+	}
 }
 
-int BinaryMaxHeap::ExtractMax() {
-	int max = heap[0];
-	if (heap.size() == 1) {
+template <typename T>
+T BinaryMaxHeap<T>::extract_max() {
+	if (size() == 0) return NULL;
+
+	T max = heap[0];
+
+	if (size() > 1) {
+		std::swap(heap[0], heap[size() - 1]);
 		heap.pop_back();
-		return max;
+		sift_down(0);
 	}
-	int last_leaf = heap[heap.size() - 1];
-	Swap(0, heap.size() - 1);
-	heap.pop_back();
-	SiftDown(0);
+	else {
+		heap.pop_back();
+	}
+
 	return max;
 }
 
-void BinaryMaxHeap::ChangePriority(int index, int priority) {
-	if (0 <= index <= heap.size() - 1) {
-		heap[index] = priority;
-		if (heap[index] > priority)
-			SiftUp(index);
-		else
-			SiftDown(index);
-	}
-	return;
-}
+template <typename T>
+void BinaryMaxHeap<T>::sift_up(uint32_t i) {
+	if (i == 0) return;
 
-void BinaryMaxHeap::SiftUp(int index) {
-	if (index == 0) return;
-
-	int parent_index = std::floor(index / 2);
-	if (0 <= parent_index <= heap.size())
-		if (heap[parent_index] < heap[index]) {
-			Swap(parent_index, index);
-			SiftUp(parent_index);
+	uint32_t parent = (i - 1) / 2;
+	if (0 <= parent && parent < size())
+		if (heap[i] > heap[parent]) {
+			std::swap(heap[parent], heap[i]);
+			sift_up(parent);
 		}
-
-	return;
 }
 
-void BinaryMaxHeap::SiftDown(int index) {
-	if (index == heap.size()) return;
+template <typename T>
+void BinaryMaxHeap<T>::sift_down(uint32_t i) {
+	if (i == (size() - 1)) return;
 
-	int max_child_index = getMaxChildIndex(index);
-	if (max_child_index == -1) return;
+	int32_t max_child = get_max_child_index(i);
+	if (max_child == -1) return;
 
-	if (heap[max_child_index] <= heap[index])
-		return;
-	else {
-		Swap(max_child_index, index);
-		SiftDown(max_child_index);
+	if (heap[max_child] > heap[i]) {
+		std::swap(heap[max_child], heap[i]);
+		sift_down(max_child);
 	}
 }
 
-void BinaryMaxHeap::Swap(int i, int j) {
-	int tmp = heap[i];
-	heap[i] = heap[j];
-	heap[j] = tmp;
-	return;
-}
+template <typename T>
+uint32_t  BinaryMaxHeap<T>::get_max_child_index(uint32_t parent_index) {
+	uint32_t l = 2 * parent_index + 1;
+	uint32_t r = l + 1;
 
-int BinaryMaxHeap::getMaxChildIndex(int parent_index) {
-	int left_index = 2 * parent_index + 1;
-	int right_index = left_index + 1;
+	if (l < size() && r < size())
+		return heap[l] > heap[r] ? l : r;
 
-	int max_index;
-	int last_index = heap.size() - 1;
-	if (left_index <= last_index && right_index <= last_index) {
-		if (heap[left_index] >= heap[right_index])
-			max_index = left_index;
-		else
-			max_index = right_index;
-		return max_index;
-	}
-	else if (left_index <= last_index)
-		return left_index;
+	else if (l < size())
+		return l;
 
 	return -1;
 }
-
-

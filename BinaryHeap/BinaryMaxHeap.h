@@ -1,23 +1,23 @@
 #pragma once
 #include<vector>
 
+template <typename T>
 class BinaryMaxHeap {
-	std::vector<int> heap;
+	std::vector<T> heap;
 
 public:
-	BinaryMaxHeap(std::vector<int> values);
+	explicit BinaryMaxHeap(std::vector<T> &values);
 	BinaryMaxHeap();
 
-	void Insert(int priority);
-	void Remove(int index);
-	int getMax();
-	int ExtractMax();
-	void ChangePriority(int index, int priority);
+	void insert(T value);
+	void remove(uint32_t i);
+	void change_priority(uint32_t i, int32_t priority);
+	int32_t get_max();
+	T extract_max();
+	uint32_t size();
 
 private:
-	void SiftUp(int index);
-	void SiftDown(int index);
-
-	int getMaxChildIndex(int parent_index);
-	void Swap(int i, int j);
+	void sift_down(uint32_t i);
+	void sift_up(uint32_t i);
+	uint32_t get_max_child_index(uint32_t parent_index);
 };
