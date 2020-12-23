@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "List.h"
 #include <iostream>
 #include <algorithm>

@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "FixedSet.h"
 
 HashFunction::HashFunction(int64_t size, std::mt19937& gen) {

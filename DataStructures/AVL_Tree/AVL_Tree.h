@@ -2,52 +2,62 @@
 #include <algorithm>
 #include <iostream>
 
-template <typename T>
-class Node {
+template <typename K, typename V = int>
+struct Node {
 public:
-	T key;
+	K key;
+	V value;
 	Node* left;
 	Node* right;
 	int height;
 
-	explicit Node(T key);
+	Node();
+	explicit Node(K key);
+	Node(K key, V value);
 	void update_height();
 };
 
-template <typename T>
+template <typename K, typename V = int>
 class AVL_Tree {
 public:
 	AVL_Tree();
+	AVL_Tree(bool allow_duplicates);
 
-	void insert(T key);
-	void remove(T key);
+	void insert(K key, V value);
+	void insert(K key);
+	void remove(K key);
 
-	T min();
-	T max();
+	K min();
+	K max();
 
-	int count(T key);
+	V find(K key);
+	bool contains(K key);
+
+	int count(K key);
 
 	void traverse(int order);
 
 	bool is_empty();
 	int size();
 
-private:
-	Node<T>* head;
+protected:
+	Node<K, V>* head;
 	int size_;
+	bool allow_dups;
+	bool is_removed;
 
-	Node<T>* left_rotation(Node<T>* x);
-	Node<T>* right_rotation(Node<T>* y);
+	Node<K, V>* left_rotation(Node<K, V>* x);
+	Node<K, V>* right_rotation(Node<K, V>* y);
 	
-	Node<T>* insert(Node<T>* node, T key);
-	Node<T>* remove(Node<T>* node, T key);
+	Node<K, V>* insert(Node<K, V>* node, K key, V value);
+	Node<K, V>* remove(Node<K, V>* node, K key, bool &is_removed);
 
-	Node<T>* max(Node<T>* node);
-	Node<T>* min(Node<T>* node);
+	Node<K, V>* max(Node<K, V>* node);
+	Node<K, V>* min(Node<K, V>* node);
 
-	void count(Node<T>* node, T key, int& count);
+	Node<K, V>* find(Node<K, V>* node, K key);
 
-	void traverse(Node<T>* node, int order);
+	void count(Node<K, V>* node, K key, int& count);
+	void traverse(Node<K, V>* node, int order);
 };
-
 
