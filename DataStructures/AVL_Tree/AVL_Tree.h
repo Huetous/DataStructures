@@ -48,7 +48,8 @@ protected:
 
 	Node<K, V>* left_rotation(Node<K, V>* x);
 	Node<K, V>* right_rotation(Node<K, V>* y);
-	
+	Node<K, V>* balance(Node<K, V>* node);
+
 	Node<K, V>* insert(Node<K, V>* node, K key, V value);
 	Node<K, V>* remove(Node<K, V>* node, K key, bool &is_removed);
 

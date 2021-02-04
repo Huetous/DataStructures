@@ -17,6 +17,8 @@ struct Node {
 template<typename T>
 class SinglyLinkedList {
 public:
+	SinglyLinkedList() : head(NULL), _size(0) {};
+
 	T pop();
 	void remove(T data);  // removes first occurence of the data
 
@@ -28,14 +30,12 @@ public:
 
 	void replace(T data, T new_data);
 	void swap(T left, T right); 
+	void reverse();
 
 	bool is_empty();
 	int size();
-
 	
 	void print(); 
-
-	SinglyLinkedList() : head(NULL), _size(0) {};
 
 private:
 	int _size;

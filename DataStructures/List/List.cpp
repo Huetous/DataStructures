@@ -2,6 +2,17 @@
 #include <iostream>
 #include <algorithm>
 
+template<typename T>
+void SinglyLinkedList<T>::reverse() {
+	Node<T> *node = head, *prev= NULL, *next = NULL;
+	while (node != NULL) {
+		next = node->next;
+		node->next = prev;
+		prev = node;
+		node = next;
+	}
+	head = prev;
+}
 
 template<typename T>
 Node<T>* SinglyLinkedList<T>::create_node(T data, Node<T>* next) {
@@ -79,7 +90,7 @@ void SinglyLinkedList<T>::remove(T data) {
 		if (node->data == data) {
 			if (prev)
 				prev->next = node->next;
-			
+
 			node = node->next;
 			_size--;
 			break;

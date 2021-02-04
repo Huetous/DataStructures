@@ -140,6 +140,27 @@ Node<K, V>* AVL_Tree<K, V>::right_rotation(Node<K, V>* y) {
 }
 
 template <typename K, typename V>
+Node<K, V>* AVL_Tree<K, V>::balance(Node<K, V>* node) {
+	node->update_height();
+
+	int diff = get_diff(node);
+
+	if (diff > 1) {
+		if (get_diff(node->left) < 0)
+			node->left = left_rotation(node->left);
+		return right_rotation(node);
+	}
+
+	if (diff < -1) {
+		if (get_diff(node->right) > 0)
+			node->right = right_rotation(node->right);
+		return left_rotation(node);
+	}
+
+	return node;
+}
+
+template <typename K, typename V>
 Node<K, V>* AVL_Tree<K, V>::insert(Node<K, V>* node, K key, V value) {
 	if (node == NULL) {
 		size_++;
@@ -155,30 +176,7 @@ Node<K, V>* AVL_Tree<K, V>::insert(Node<K, V>* node, K key, V value) {
 		return node;
 	}
 
-	node->update_height();
-
-	int diff = get_diff(node);
-
-	if (diff > 1) {
-		if (key < node->left->key) {
-			return right_rotation(node);
-		}
-		else {
-			node->left = left_rotation(node->left);
-			return right_rotation(node);
-		}
-	}
-
-	if (diff < -1) {
-		if (key < node->right->key) {
-			node->right = right_rotation(node->right);
-			return left_rotation(node);
-		}
-		else
-			return left_rotation(node);
-	}
-
-	return node;
+	return balance(node);
 }
 
 template <typename K, typename V>
@@ -205,32 +203,7 @@ Node<K, V>* AVL_Tree<K, V>::remove(Node<K, V>* node, K key, bool& is_removed) {
 	}
 
 	is_removed = true;
-	if (node == NULL) return node;
-
-	node->update_height();
-
-	int diff = get_diff(node);
-
-	if (diff > 1) {
-		if (get_diff(node->left) >= 0) {
-			return right_rotation(node);
-		}
-		else {
-			node->left = left_rotation(node->left);
-			return right_rotation(node);
-		}
-	}
-
-	if (diff < -1) {
-		if (get_diff(node->right) > 0) {
-			node->right = right_rotation(node->right);
-			return left_rotation(node);
-		}
-		else
-			return left_rotation(node);
-	}
-
-	return node;
+	return node == NULL ? node: balance(node);
 }
 
 template <typename K, typename V>
